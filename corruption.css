@@ -1,0 +1,381 @@
+/* corruption.css
+   -------------------------------------------------------------------
+   Visual effects for the corruption ending sequence:
+   the black fog overlay, the shaking/glitching spam ads, the
+   "Looking away is never the answer" gate button, and the final
+   "What's new" / system-override modal.
+
+   Paste this alongside style.css and link it in <head>, AFTER
+   style.css so it can safely override anything it needs to.
+   ------------------------------------------------------------------- */
+
+/* ==========================================================================
+   SEVERE VIRUS CORRUPTION MODE & EFFECTS
+   (fog, spam-ad swarm, "looking away" gate — matches css_new.txt)
+   ========================================================================== */
+
+.grayscale-glitch-body #bg-canvas-container,
+.grayscale-glitch-body .topbar,
+.grayscale-glitch-body .page,
+.grayscale-glitch-body .banner {
+  filter: grayscale(100%) brightness(70%) contrast(120%);
+}
+
+/* ---------- FOG OVERLAY ---------- */
+/* Sits above regular page content but below the spam ads (z-index),
+   so the loud red ads stay legible while the page behind them sinks
+   into black over the full corruption window. */
+#fog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background: black;
+
+  opacity: 0;
+  z-index: 900000;
+  pointer-events: none;
+
+  transition: opacity 10s ease-in-out;
+}
+
+#fog-overlay.fog-active {
+  opacity: 0.95;
+  pointer-events: all;
+}
+
+/* ---------- SPAM ADS ---------- */
+.spam-ad {
+  position: fixed;
+
+  background: #8b0000;
+  color: #fff;
+  border: 4px solid #ff0000;
+  outline: 2px solid yellow;
+
+  font-family: "Courier New", Courier, monospace;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.9);
+  z-index: 900001;
+
+  transform: rotate(var(--rot, 0deg));
+  animation: spamShake 0.1s infinite alternate;
+}
+
+@keyframes spamShake {
+  0% {
+    transform: translate(2px, 2px) rotate(var(--rot, 0deg));
+  }
+  100% {
+    transform: translate(-2px, -2px) rotate(calc(var(--rot, 0deg) + 2deg));
+  }
+}
+
+.grayscale-glitch-body .spam-ad {
+  box-shadow: 8px 8px 0px #fffc00 !important;
+}
+
+/* ---------- "LOOKING AWAY" GATE BUTTON ---------- */
+#look-away-btn {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 20px 40px;
+
+  background: #fffc00 !important;
+  color: #000 !important;
+  border: 4px solid #000 !important;
+  box-shadow: 0 0 20px #fffc00 !important;
+
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  opacity: 0;
+  z-index: 900002; /* above everything, including the spam ads */
+
+  transition:
+    opacity 2s ease-in,
+    background 0.3s;
+}
+
+#look-away-btn.look-away-visible {
+  opacity: 1;
+  animation: crtFlicker 0.15s infinite;
+}
+
+#look-away-btn:hover {
+  background: #000 !important;
+  color: #fffc00 !important;
+  box-shadow: 0 0 40px #fffc00 !important;
+  animation: none;
+}
+
+@keyframes crtFlicker {
+  0% {
+    opacity: 0.9;
+    text-shadow: 2px 0 0 red, -2px 0 0 blue;
+  }
+  100% {
+    opacity: 1;
+    text-shadow: -2px 0 0 red, 2px 0 0 blue;
+  }
+}
+
+
+/* ==========================================================================
+   FINAL PANEL (legacy / currently unused — showFinalPanel() now renders the
+   MODAL CLASSES below instead. Left in place in case you still reference
+   .finalPanel* somewhere; safe to delete if not.)
+   ========================================================================== */
+.finalPanel {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 40px 20px;
+
+  background: #f4f4f4;
+  font-family: Georgia, serif;
+}
+
+.finalPanel-card {
+  max-width: 800px;
+
+  padding: 40px;
+
+  background: white;
+  border: 2px solid #3700C0;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.finalPanel-card h1 {
+  margin-top: 0;
+  padding-bottom: 10px;
+
+  border-bottom: 2px solid #3700C0;
+
+  color: #3700C0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.finalPanel-card p {
+  margin-bottom: 20px;
+
+  color: #333;
+  line-height: 1.8;
+}
+
+.finalPanel-contact {
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+
+  margin-top: 30px;
+  padding: 25px;
+
+  background: #e9e7df;
+  border-left: 6px solid #3700C0;
+}
+
+.finalPanel-contact h3 {
+  margin-top: 0;
+
+  color: #3700C0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.finalPanel-contact p {
+  margin: 5px 0;
+}
+
+.finalPanel-note {
+  margin-top: 15px !important;
+}
+
+
+/* ==========================================================================
+   MODAL CLASSES — "SYSTEM OVERRIDE" panel
+   Restyled to match the retro Windows-98 popup look from sketchPu.txt:
+   grey chrome, navy titlebar, outset borders, hard drop-shadow — same
+   family as the .spam-ad "hydra" popups, just scaled up into a full
+   window. Only the chrome (overlay/box/header/close button) changed;
+   the dark reading area and text classes below are untouched.
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: rgba(30, 30, 30, 0.8);
+  z-index: 1000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal-box {
+  width: 600px;
+  max-width: 90%;
+  max-height: 85vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #c0c0c0;
+  border: 3px outset #eee;
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.9);
+}
+
+.modal-header {
+  flex-shrink: 0;
+
+  padding: 6px 8px;
+
+  background-color: #0000aa;
+  border-bottom: 2px solid #000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.close-btn {
+  background: #ccc;
+  color: black;
+  border: 2px outset #fff;
+
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+
+  padding: 0 6px;
+  cursor: pointer;
+
+  transition: background 0.2s, color 0.2s;
+}
+
+.close-btn:active {
+  border: 2px inset #fff;
+}
+
+.close-btn:hover {
+  background: #ff4444;
+  color: white;
+}
+
+.modal-content {
+  padding: 20px;
+  line-height: 1.6;
+  max-height: 70vh;
+  overflow-y: auto;
+
+  background: #d4d0c8; /* classic Windows-98 panel grey, matches modal-box */
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal-main-heading {
+  margin: 0 0 15px;
+  padding: 10px;
+
+  background: #fffc00;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.6);
+
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.6em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cta-title {
+  margin-top: 0;
+  padding-bottom: 5px;
+
+  border-bottom: 2px solid #000;
+
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.modal-content p {
+  font-size: 1em;
+  line-height: 1.6;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.medical-info-box {
+  background: #fff;
+  border: 2px solid #0000aa;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  margin: 25px 0;
+}
+
+.medical-info-box h3 {
+  margin-top: 0;
+
+  color: #0000aa;
+  font-family: Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.medical-info-box p {
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.medical-info-box ul {
+  margin-top: 5px;
+  color: #000;
+  line-height: 1.6;
+}
+
+.highlight-text {
+  background: #fffc00;
+  padding: 0 3px;
+  color: #cc0000;
+  font-weight: bold;
+}
+
+.about-us-text {
+  padding-top: 15px;
+  border-top: 1px solid #999;
+  color: #555;
+  font-size: 0.9em;
+  font-style: italic;
+}
