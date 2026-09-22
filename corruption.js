@@ -198,6 +198,11 @@
               project with the purpose of helping everyone view people struggling
               with addiction through a gentler, more empathetic lens, and to
               understand the practical steps needed to help them overcome it.
+              Contact:
+              Tran Thi Thuy Hang - s4034075@rmit.edu.vn
+              Dan Le Nguyen Thuy - s4158958@rmit.edu.vn
+              Ngoc Nguyen Duc Bao - S4067283@rmit.edu.vn
+              Nam Vu Hai - S4118255@rmit.edu.vn
             </p>
           </div>
         </div>
